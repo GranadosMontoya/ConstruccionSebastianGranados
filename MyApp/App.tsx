@@ -1,84 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, Button, Alert, StyleSheet, TextInput } from 'react-native';
-import moment from 'moment-timezone';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function App() {
-  const [usuario, setUsuario] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [autenticado, setAutenticado] = useState(false);
+import Login from './src/components/Login'; // Importa tus componentes
+import Home from './src/components/Home'; // Importa tus componentes
 
-  const validarUsuario = () => {
-    if (usuario === '123' && contrasena === '123') {
-      setAutenticado(true);
-    } else {
-      Alert.alert('Error', 'Usuario no válido');
-    }
-  };
+const Stack = createNativeStackNavigator();
 
-  const registrarHoraIngreso = () => {
-    const horaIngreso = moment().tz('America/Bogota').format('HH:mm');
-    Alert.alert('Ingreso Guardado con Éxito', `Hora de Ingreso: ${horaIngreso}`);
-  };
-
+const App: React.FC = () => {
   return (
-    <View style={styles.container}>
-      {autenticado ? (
-        <View style={styles.pantalla}>
-          <Text style={styles.texto}>Registrar hora de entrada</Text>
-          <Button title="Registrar Hora de Ingreso" onPress={registrarHoraIngreso} />
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.texto}>Inicio de Sesión</Text>
-          <Text style={styles.mensaje}>User: 123</Text>
-          <Text style={styles.mensaje}>Password:123</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Usuario"
-            onChangeText={(text) => setUsuario(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            secureTextEntry={true}
-            onChangeText={(text) => setContrasena(text)}
-          />
-          <Button title="Iniciar Sesión" onPress={validarUsuario} />
-        </View>
-      )}
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pantalla: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'black',
-  },
-  texto: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  mensaje:{
-    fontSize:10,
-    marginBottom: 20,
-  }
-});
+};
 
 export default App;
