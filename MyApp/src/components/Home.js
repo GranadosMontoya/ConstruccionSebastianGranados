@@ -1,45 +1,57 @@
+import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Modal } from 'react-native';
+import { View, Text, StyleSheet, Button, Modal, FlatList } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 
 const Home = () => {
-  // Inicializa selectedDate como un objeto Date con la fecha actual
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [ModalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [registros, setRegistros] = useState([]);
+
+  const route = useRoute();
+  const { usuario } = route.params;
 
   const handleRegister = () => {
-    // Aquí puedes implementar la lógica de registro de horas.
-    // Puedes enviar la fecha (selectedDate) al servidor o realizar acciones locales.
-    alert(`Fecha seleccionada: ${selectedDate}`);
+    const now = new Date(); // Obtener la hora actual del sistema
+    const registro = {
+      fechaIngreso: now.toLocaleDateString(),
+      horaIngreso: now.toLocaleTimeString(),
+    };
+    setRegistros([...registros, registro]);
     setModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registro de Horas</Text>
-      <Button
-        onPress={() => setModalVisible(true)}
-        title="Registrar entrada"
+      <Button onPress={() => setModalVisible(true)} title="Registrar entrada" />
+      <FlatList
+        data={registros}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.registroItem}>
+            <Text>{`Nombre completo: ${usuario.nombre} ${usuario.apellido}`}</Text>
+            <Text>{`Cedula: ${usuario.cedula}`}</Text>
+            <Text>{`Fecha de ingreso: ${item.fechaIngreso}`}</Text>
+            <Text>{`Hora de ingreso: ${item.horaIngreso}`}</Text>
+          </View>
+        )}
       />
       <Modal
-        visible={ModalVisible}
+        visible={modalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setModalVisible(false)} // Agrega esta línea para manejar el cierre del modal
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <DatePicker
-              style={{ width: 300 }}
+            <DatePicker // Configura el DatePicker
               date={selectedDate}
-              mode="date"
-              placeholder="Seleccione una fecha"
-              format="YYYY-MM-DD"
-              confirmBtnText="Confirmar"
-              cancelBtnText="Cancelar"
-              onDateChange={(date) => setSelectedDate(new Date(date))}
+              onDateChange={(date) => setSelectedDate(date)}
+              mode="date" // Permite elegir solo la fecha
+              locale="es-ES" // Cambia la localización si es necesario
             />
-            <Button title="Seleccionar" onPress={handleRegister} style={styles.btnSelect} />
+            <Button title="Registrar" onPress={handleRegister} style={styles.btnSelect} />
             <Button title="Cerrar" onPress={() => setModalVisible(false)} />
           </View>
         </View>
@@ -60,10 +72,6 @@ const styles = StyleSheet.create({
     color: '#5195FF',
     marginBottom: 20,
   },
-  datePicker: {
-    width: '80%',
-    marginBottom: 20,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -75,11 +83,17 @@ const styles = StyleSheet.create({
     width: '80%',
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center', // Centra el contenido horizontalmente
+    alignItems: 'center',
   },
-  btnSelect:{
-    padding:20,
-    color:'green'
+  btnSelect: {
+    padding: 20,
+    color: 'green',
+  },
+  registroItem: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    margin: 10,
+    padding: 10,
   },
 });
 
