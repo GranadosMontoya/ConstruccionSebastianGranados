@@ -12,7 +12,7 @@ const Home = () => {
   const { usuario } = route.params;
 
   const handleRegister = () => {
-    const now = new Date(); // Obtener la hora actual del sistema
+    const now = new Date();
     const registro = {
       fechaIngreso: now.toLocaleDateString(),
       horaIngreso: now.toLocaleTimeString(),
@@ -48,8 +48,7 @@ const Home = () => {
             <DatePicker // Configura el DatePicker
               date={selectedDate}
               onDateChange={(date) => setSelectedDate(date)}
-              mode="date" // Permite elegir solo la fecha
-              locale="es-ES" // Cambia la localización si es necesario
+              mode="date"
             />
             <Button title="Registrar" onPress={handleRegister} style={styles.btnSelect} />
             <Button title="Cerrar" onPress={() => setModalVisible(false)} />
