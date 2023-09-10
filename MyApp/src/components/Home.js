@@ -45,7 +45,7 @@ const Home = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <DatePicker // Configura el DatePicker
+            <DatePicker
               date={selectedDate}
               onDateChange={(date) => setSelectedDate(date)}
               mode="date"
